@@ -1,0 +1,111 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Exam #2
+## Joshua Chen
+
+## Question 1:
+
+$S_{n+1} = qS_n + cR_n$\
+$I_{n+1} = (1-q)S_n + bI_n$\
+$R_{n+1} = (1-c)R_n + (1-b)I_n$
+
+#### Part A)
+$I^* = (1-q)S^* + bI^*$
+
+$I^* - bI^* = (1-q)S^* \Rightarrow (1-b)I^* = (1-q)S^* \Rightarrow \cfrac{S^*}{I^*} = \cfrac{1-b}{1-q} = \cfrac{b-1}{q-1} \checkmark$\
+
+$f(S_k, I_k, R_k) = qS_k + cR_k \implies \qquad \quad \cfrac{\partial f}{\partial S_k} = q \qquad \qquad \cfrac{\partial f}{\partial I_k} =0 \qquad \qquad \cfrac{\partial f}{\partial R_k} =c$\
+$g(S_k, I_k, R_k) = (1-q)S_n + bI_n \implies \quad \cfrac{\partial g}{\partial S_k} = 1-q \qquad \cfrac{\partial g}{\partial I_k} = b \qquad \qquad \cfrac{\partial g}{\partial R_k} = 0$\
+$h(S_k, I_k, R_k) = (1-c)R_n + (1-b)I_n \Rightarrow \cfrac{\partial h}{\partial S_k} = 0 \qquad \cfrac{\partial h}{\partial I_k} = 1-b \qquad \cfrac{\partial h}{\partial R_k} = 1-c$\
+
+$\qquad J \begin{pmatrix} f(S_k,I_k,R_k)\\ g(S_k,I_k,R_k)\\ h(S_k,I_k,R_k) \end{pmatrix} = \begin{pmatrix} q & 0 & c\\ 1-q & b & 0\\ 0 & 1-b & 1-c \end{pmatrix}$
+
+#### Part B)
+$S_0 = 9000, I_0 = 900, R_0 = 300$\
+$q = \cfrac{1}{4}, b = \cfrac{4}{5}, c = \cfrac{1}{100}$\
+
+#### Part B3)
+Here's the graph:
+```{r, out.width = "350px", echo = FALSE, fig.align='center'}
+knitr::include_graphics("/Users/joshuachen/exam_2_modeling/sir.png")
+```
+
+```{r, message=FALSE}
+data <- readr::read_csv("/Users/joshuachen/exam_2_modeling/SIR_data.csv")
+round(data[80:90, "S/I"], digits = 7)
+```
+## Question 2:
+#### Part A)
+Use substitution such that $u_n = \cfrac{1}{x_n}$\
+
+Therefore, $\cfrac{1}{u_{n+1}} = \cfrac{1}{u_n}\cfrac{r}{\cfrac{1}{u_n} + A} \Rightarrow u_{n+1} = u_n\cfrac{1+Au_n}{ru_n} = \cfrac{1+Au_n}{r} = \cfrac{A}{r}u_n + \cfrac{1}{r}$\
+This is a first order linear difference equation where $A^* = \cfrac{A}{r}$ and $B^* = \cfrac{1}{r}$\
+Therefore the solution to $u_{n+1} = \left(\cfrac{A}{r}\right)^{n+1}u_0 + \cfrac{\cfrac{1}{r}}{1-\cfrac{A}{r}} (1-\left(\cfrac{A}{r}\right)^{n+1}) = \left(\cfrac{A}{r}\right)^{n+1}u_0 + \cfrac{1}{r-A}\left(1-\left(\cfrac{A}{r}\right)^{n+1}\right)$\
+
+Substitute back in $x_n$:\
+$\cfrac{1}{x_{n+1}} = \left(\cfrac{A}{r}\right)^{n+1}\cfrac{1}{x_0} + \cfrac{1}{r-A}\left(1-\left(\cfrac{A}{r}\right)^{n+1}\right)= \left(\cfrac{A}{r}\right)^{n+1}\left(\cfrac{1}{x_0}\right) -\left(\cfrac{A}{r}\right)^{n+1}\left(\cfrac{1}{r-A}\right) + \cfrac{1}{r-A}$\
+
+Denominators have $r^{n+1}, x_0, (r-a)$ in common. Simplifies to:\
+
+$\cfrac{1}{x_{n+1}} = \cfrac{A^{n+1}(r-A) - A^{n+1}x_0+r^{n+1}x_0}{r^{n+1}x_0(r-A)} \implies$\
+$x_{n+1} = \cfrac{r^{n+1}x_0(r-A)}{A^{n+1}(r-A) - A^{n+1}x_0+r^{n+1}x_0} = \cfrac{r^{n+1}x_0(r-A)}{A^{n+1}(r-A) + \left(r^{n+1}-A^{n+1}\right)x_0} =\cfrac{r^{n+1}x_0}{A^{n+1} + \left(r^{n}-A^{n}\right)x_0}$
+
+#### Part B)
+Let $x^* = x_n = x_n+1$\
+$x^* = \cfrac{rx^*}{x^* + A} \Rightarrow x^{*^2} + Ax* - rx^* = 0 \Rightarrow x^*(x^* + A - r) = 0$\
+Fixed points are at $x^* = 0$ and $x^* = r-A$\
+
+If $f(x) = \cfrac{rx^*}{x^* + A}$, then $f'(x) = \cfrac{(x^* + A)r - 1(rx^*)}{(x^* + A)^2} = \cfrac{Ar}{(x^* + A)^2}$ \
+
+$f'(0) = r/A$ and $f'(r-A) =\cfrac{Ar}{(r-A + A)^2} = \cfrac{A}{r}$\
+If $|A| > |r|$, point $x^* = (r-A)$ is a stable fixed point and point $x^* = 0$ is unstable.\
+If $|A| < |r|$, point $x^* = 0$ is a stable fixed point and point $x^* = (r-a)$ is unstable.
+
+
+#### Part C)
+Here are three cobweb diagrams with different As and rs to verify the results.
+```{r, out.width = "350px", echo = FALSE, fig.align='center'}
+knitr::include_graphics("/Users/joshuachen/exam_2_modeling/cobweb_1.png")
+```
+```{r, out.width = "350px", echo = FALSE, fig.align='center'}
+knitr::include_graphics("/Users/joshuachen/exam_2_modeling/cobweb_2.png")
+```
+```{r, out.width = "350px", echo = FALSE, fig.align='center'}
+knitr::include_graphics("/Users/joshuachen/exam_2_modeling/cobweb_3.png")
+```
+
+## Question 3:
+$S_t = I_t$\
+$\cfrac{S_t}{Y_t} = \alpha$\
+$\cfrac{I_{t+1}}{\Delta Y_t} = \cfrac{I_{t+1}}{Y_{t+1}-Y_{t}} = \beta$
+
+#### Part A)
+Assume $\beta > \alpha > 0$\
+$S_t = \alpha Y_t$\
+Solving for $Y_t$:\
+$Y_{t+1} - Y_t = \cfrac{I_{t+1}}{\beta} \implies Y_{t+1} = \cfrac{I_{t+1}}{\beta}+Y_t$\
+$Y_{t+1} = \cfrac{\alpha Y_{t+1}}{\beta} + Y_t \implies Y_{t+1}- \cfrac{\alpha Y_{t+1}}{\beta} = Y_t \implies Y_{t+1}(1-\cfrac{\alpha}{\beta}) = Y_t \implies Y_{t+1}\cfrac{\beta-\alpha}{\beta} = Y_t \implies Y_{t+1} = Y_t\cfrac{\beta}{\beta-\alpha}$\
+Therefore, $Y_t = \left(\cfrac{\beta}{\beta-\alpha}\right)^tY_0$\
+ 
+Solving for $I_t$:\
+$Y_{t+1} = \cfrac{\alpha Y_{t+1}}{\beta} + Y_t$:\
+$\cfrac{I_{t+1}}{\alpha} = \cfrac{I_{t+1}}{\beta} + \cfrac{I_t}{\alpha} \implies \cfrac{I_{t+1}}{\alpha} - \cfrac{I_{t+1}}{\beta} = \cfrac{I_t}{\alpha} \implies I_{t+1} \left(\cfrac{1}{\alpha} - \cfrac{1}{\beta}\right) = \cfrac{I_t}{\alpha} \implies I_{t+1} \left(\cfrac{\beta-\alpha}{\alpha\beta}\right) = \cfrac{I_t}{\alpha}$\
+$\implies I_{t+1} = \left(\cfrac{\beta}{\beta - \alpha}\right) I_t$\
+Therefore, $I_t = \left(\cfrac{\beta}{\beta-\alpha}\right)^tI_0$\
+This checks out with our previous result for $Y_t$.\
+
+#### Part B)
+The national income grows exponentially by a ratio of $\cfrac{\beta}{\beta - \alpha}$\
+If $\alpha > \beta > 0$, then $\cfrac{\beta}{\beta - \alpha}$ is a negative number.\
+Here is an example of $-1 < \cfrac{\beta}{\beta - \alpha} < 0$. It oscillates and diverges.
+```{r, out.width = "350px", echo = FALSE, fig.align='center'}
+knitr::include_graphics("/Users/joshuachen/exam_2_modeling/3_1.png")
+```
+Here is an example of $\cfrac{\beta}{\beta - \alpha} < -1$. It oscillates and converges to 0.
+```{r, out.width = "350px", echo = FALSE, fig.align='center'}
+knitr::include_graphics("/Users/joshuachen/exam_2_modeling/3_2.png")
+```
+Note: If $\cfrac{\beta}{\beta - \alpha} = -1$, it just oscillates between $Y_0$ and $-Y_0$.
