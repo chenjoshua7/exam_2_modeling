@@ -1,3 +1,5 @@
+library(readr)
+
 initial <- c(9000,900, 300)
 
 q=1/4
@@ -22,6 +24,8 @@ for (x in 2:101) {
 
 SIR_data$`S/I` <- as.numeric(unlist(SIR_data$S))/as.numeric(unlist(SIR_data$I))
 
+write_csv(SIR_data, "SIR_data.csv")
+
 ggplot(data = SIR_data)+
   geom_point(mapping = aes(x = n, y = S), color = "darkolivegreen3")+
   geom_line(mapping = aes(x = n, y = S), color = "darkolivegreen3")+
@@ -33,3 +37,4 @@ ggplot(data = SIR_data)+
   geom_line(mapping = aes(x = n, y = R), color = "cornflowerblue")+
   annotate(geom = "text", x = 50, y = 9300, label = "Recovered", size = 4) + 
   ylab("Population") + xlab("Weeks")
+

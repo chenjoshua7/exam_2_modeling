@@ -2,6 +2,7 @@
 output:
   pdf_document: default
   html_document: default
+urlcolor: blue
 ---
 # Exam #2
 ## Joshua Chen
@@ -23,20 +24,91 @@ $h(S_k, I_k, R_k) = (1-c)R_n + (1-b)I_n \Rightarrow \cfrac{\partial h}{\partial 
 
 $\qquad J \begin{pmatrix} f(S_k,I_k,R_k)\\ g(S_k,I_k,R_k)\\ h(S_k,I_k,R_k) \end{pmatrix} = \begin{pmatrix} q & 0 & c\\ 1-q & b & 0\\ 0 & 1-b & 1-c \end{pmatrix}$
 
+Using the [WolframAlpha Eigenvalue Calculator](https://www.wolframalpha.com/input/?i=%7B%28q%2C+0%2C+c%29%2C+%281-q%2C+b%2C+0%29%2C%280%2C1-b%2C+1-c%29%7D):
+```{r, out.width = "350px", echo = FALSE, fig.align='center'}
+knitr::include_graphics("/Users/joshuachen/exam_2_modeling/eigenvalues.png")
+```
+The first eigenvalue has value 1.\
+By the Linearized Stability Theorem for Maps:
+
+If $\lambda_2$ and/or $\lambda_3$ has modulus greater than 1, then the model $(S^*,I^*, R^*)$ is unstable.
+If $\lambda_2$ and/or $\lambda_3$ has modulus less than or equal to 1, then the model $(S^*,I^*, R^*)$, the system neither diverges from nor converges to the fixed points (no conclusion).
+
+\pagebreak
+
 #### Part B)
 $S_0 = 9000, I_0 = 900, R_0 = 300$\
 $q = \cfrac{1}{4}, b = \cfrac{4}{5}, c = \cfrac{1}{100}$\
 
+#### Part B1)
+$V_k = A^{*k}V=\begin{pmatrix}S_k\\I_k\\R_k\end{pmatrix}$\
+$A^{*k} = \begin{pmatrix} q & 0 & c\\ 1-q & b & 0\\ 0 & 1-b & 1-c \end{pmatrix} = \begin{pmatrix}0 .25 & 0 & 0.01\\ 0.75 & 0.8 & 0\\ 0 & 0.2 & 0.99 \end{pmatrix}$
+
+&nbsp;
+
+Using [WolframAlpha](https://www.wolframalpha.com/input/?i=%7B%280.25%2C+0%2C+0.01%29%2C+%280.75%2C+0.8%2C+0%29%2C%280%2C0.2%2C+0.99%29%7D):\
+Eigenvalues:\
+$\lambda_1 = 1$\
+$\lambda_2 = 1/100 (52 + \sqrt{709}) = 0.78627053911$\
+$\lambda_3 = 1/100 (52 - \sqrt{709}) = 0.25372946088$
+
+Eigenvectors:\
+$v_1 = \left(\cfrac{1}{75}, \cfrac{1}{20}, 1\right) = (0.01333, 0.05, 1)$\
+$v_2 = \left(\cfrac{1}{20} (27 - \sqrt{709}), \cfrac{1}{20}(-47 + \sqrt{709}), 1\right)= (0.01864730443,-1.01864730443, 1)$\
+$v_3 = \left(\cfrac{1}{20} (27 + \sqrt{709}), \cfrac{1}{20}(-47 - \sqrt{709}), 1\right) = (2.68135269557, -3.68135269557, 1)$
+
+$S_0 = 9000 = c_1(0.01333) + c_2(0.01864730443) + c_3(2.68135269557)$\
+$I_0 = 900 = c_1(0.05) + c_2(-1.01864730443) + c_3(-3.68135269557)$\
+$R_0 = 300 = c_1 + c_2 + c_3$
+
+&nbsp;
+
+Using [WolframAlpha's System Calculator](https://www.wolframalpha.com/input/?i=systems+of+equations+calculator&assumption=%7B%22F%22%2C+%22SolveSystemOf3EquationsCalculator%22%2C+%22equation1%22%7D+-%3E%229000+%3D+x%280.01333%29+%2B+y%280.01864730443%29+%2B+z%282.68135269557%29%22&assumption=%22FSelect%22+-%3E+%7B%7B%22SolveSystemOf3EquationsCalculator%22%7D%7D&assumption=%7B%22F%22%2C+%22SolveSystemOf3EquationsCalculator%22%2C+%22equation2%22%7D+-%3E%22900+%3D+x%280.05%29+%2B+y%28-1.01864730443%29+%2B+z%28-3.68135269557%29%22&assumption=%7B%22F%22%2C+%22SolveSystemOf3EquationsCalculator%22%2C+%22equation3%22%7D+-%3E%22300+%3D+x+%2B+y+%2B+z%22)\
+$c_1 = 9592.51, c_2 = -12689.6, c_3 = 3397.08$
+
+Therefore:\
+$S_k = 9592.51(0.01333) + (-12689.6)(0.01864730443)(0.78627053911)^k + 3397.08(2.68135269557)(0.25372946088)^k = 127.868-236.627(0.786)^k+9108.770(0.254)^k$\
+$I_k = 9592.51(0.05) + -12689.6(-1.01864730443)(0.78627053911)^k + 3397.08(-3.68135269557)(0.25372946088)^k  = 479.626 - 12926.227(0.786)^k + -12505.850(0.254)^k$\
+$R_k = 9592.51 - 12689.6(0.786)^k + 3397.08(0.254)^k$
+
+Answer:
+$S_k = 127.868-236.627(0.786)^k+9108.770(0.254)^k$\
+$I_k = 479.626 - 12926.227(0.786)^k + -12505.850(0.254)^k$\
+$R_k = 9592.51 - 12689.6(0.786)^k + 3397.08(0.254)^k$
+
+#### Part B2)
+
+Looking at the answer above, as $k \rightarrow \infty$, all the terms to the k power that are less than 1 collapse to 0.\
+For example: $S_\infty = 127.868-236.627(0.786)^\infty+9108.770(0.254)^\infty = 127.868 + 0 + 0$\
+Therefore: $(S_\infty,I_\infty,R_\infty) = (127.868,479.626,9592.51)$
+
+```{r message=FALSE}
+data <- readr::read_csv("SIR_data.csv")
+tail(data, 5)
+```
+Looking at the data, the values at $n = 100$,\
+$(S_{100},I_{100},R_{100}) = (127.89969,479.6238,9592.476)$\
+This is very similar to our values at $(S_\infty,I_\infty,R_\infty)$.
+
 #### Part B3)
 Here's the graph:
+Dataset can be found [here](https://github.com/chenjoshua7/exam_2_modeling/blob/master/SIR_data.csv)
 ```{r, out.width = "350px", echo = FALSE, fig.align='center'}
 knitr::include_graphics("/Users/joshuachen/exam_2_modeling/sir.png")
 ```
 
 ```{r, message=FALSE}
-data <- readr::read_csv("/Users/joshuachen/exam_2_modeling/SIR_data.csv")
-round(data[80:90, "S/I"], digits = 7)
+q=1/4
+b=4/5
+(b-1)/(q-1)
 ```
+
+Looking at the dataset, in the column 'S/I', if rounding to the 7th digit, the ratio converges and remains at 0.2666667. The is the desired convergent point as calculated above.
+
+This means that the ratio between suceptibles and infectives from this point on remains 0.2666667. Judging from the graph and the data, this follows as the suceptible and infective popultions are also fixed after this point n.
+
+\pagebreak
+
 ## Question 2:
 #### Part A)
 Use substitution such that $u_n = \cfrac{1}{x_n}$\
@@ -66,18 +138,63 @@ If $|A| < |r|$, point $x^* = 0$ is a stable fixed point and point $x^* = (r-a)$ 
 
 
 #### Part C)
+Cobweb points were found using R. The rest of the cobweb was drawn manually.\
 Here are three cobweb diagrams with different As and rs to verify the results.
 ```{r, out.width = "350px", echo = FALSE, fig.align='center'}
 knitr::include_graphics("/Users/joshuachen/exam_2_modeling/cobweb_1.png")
 ```
+```{r}
+#    x         y
+#1   1 0.1000000
+#2   2 0.2538462
+#3   3 0.5761905
+#4   4 1.0705094
+#5   5 1.5558980
+#6   6 1.8630818
+#7   7 2.0071844
+#8   8 2.0652721
+#9   9 2.0872374
+#10 10 2.0953410
+```
 ```{r, out.width = "350px", echo = FALSE, fig.align='center'}
 knitr::include_graphics("/Users/joshuachen/exam_2_modeling/cobweb_2.png")
+```
+```{r}
+#    x         y
+#1   1 0.7500000
+#2   2 0.8823529
+#3   3 1.0067114
+#4   4 1.1169025
+#5   5 1.2095799
+#6   6 1.2841696
+#7   7 1.3421029
+#8   8 1.3858678
+#9   9 1.4182412
+#10 10 1.4418175
 ```
 ```{r, out.width = "350px", echo = FALSE, fig.align='center'}
 knitr::include_graphics("/Users/joshuachen/exam_2_modeling/cobweb_3.png")
 ```
+```{r}
+#    x           y
+#1   1 -0.70000000
+#2   2 -0.57272727
+#3   3 -0.45119363
+#4   4 -0.34327678
+#5   5 -0.25346389
+#6   6 -0.18266273
+#7   7 -0.12919722
+#8   8 -0.09011890
+#9   9 -0.06223234
+#10 10 -0.04267070
+```
+Notice in the first two cases, when $r-A > 0$, the points go to $x = r-A$.\
+However, in the last case where $A-r < 0$, the points go to $x = 0$
+
+\pagebreak
 
 ## Question 3:
+
 $S_t = I_t$\
 $\cfrac{S_t}{Y_t} = \alpha$\
 $\cfrac{I_{t+1}}{\Delta Y_t} = \cfrac{I_{t+1}}{Y_{t+1}-Y_{t}} = \beta$
